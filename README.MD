@@ -21,5 +21,5 @@ ou
 python3 -m bruteforce.py [nom du csv] pour Linux et mac Os
 python3 -m optimized.py [nom du csv] pour Linux et mac Os
 ```
-***Note le fichier doit de données doit être sous format csv***
+***Note : le fichier de données doit être sous format csv***
 ***avec séparateur ',' et les titres en ligne 1***

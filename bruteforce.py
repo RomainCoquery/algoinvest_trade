@@ -56,10 +56,10 @@ def main():
     print(f"  {header[0]}        {header[1]}        {header[2]}\n")
     best_profit, best_comb, total_profit = bruteforce(actions)
     for i in best_comb:
-        print(str(i[0]) + ' for ' + str(i[1]) + '€ and ' +str(i[2]) +
-         '€ of profit.')
+        print(f"{str(i[0])} for {round(float(i[1]), 2)}€ and "
+        f"{round(float(i[1]) * float(i[2]) / 100, 2)}€ of profit.")
     print(f"\nTotal profit is : {round(best_profit, 2)}€ for a budget of"
-    f" {total_profit}€.")
+    f" {round(total_profit, 2)}€.")
 
     execution_time = round(time() - start_time, 4)
     print(f"\nExecution time: {execution_time}s\n")
