@@ -20,16 +20,44 @@ def create_list(file):
     return header, actions, incorrect_lines
 
 def greedy(dataset):
-    actions = dataset
-    actions_sort = sorted(actions, key=lambda x: float(x[2]) / 100)
+    actions = sorted(dataset, key=lambda x: float(x[2]) / 100)
     actions_selected = []
     expense = 0
 
-    while actions_sort:
-        action = actions_sort.pop()
+    while actions:
+        action = actions.pop()
         if float(action[1]) + expense < BUDGET:
             actions_selected.append(action)
             expense += float(action[1])
+
+    total_profit = sum(float(i[1]) * float(i[2]) / 100 for i in actions_selected)
+    return actions_selected, expense, total_profit
+
+
+def dynamic(dataset):
+    actions = sorted(dataset, key=lambda x: float(x[1]))
+    actions_selected = []
+    expense = 0
+    matrix = [[0 for x in range(BUDGET + 1)] for x in range(len(actions) + 1)]
+
+    for i in range(1, len(actions) + 1):
+        for w in range(1, BUDGET + 1):
+            if float(actions[i - 1][1]) <= w:
+                matrix[i][w] = max(int(actions[i - 1][2]) + matrix[i - 1]
+                [w - int(actions[i - 1][1])], matrix[i - 1][w])
+    
+    w = BUDGET
+    n = len(actions)
+
+    while w > 0 and n > 0:
+        action = actions[n - 1]
+        if matrix[n][w] == matrix[n - 1][w - int(action[1])] + int(action[2]):
+            actions_selected.append(action)
+            w -= int(action[1])
+        n -= 1
+    
+    for action in actions_selected:
+        expense += float(action[1])
 
     total_profit = sum(float(i[1]) * float(i[2]) / 100 for i in actions_selected)
     return actions_selected, expense, total_profit
@@ -57,9 +85,10 @@ def main():
     for i in actions_selected:
         print(f"{i[0]} for {round(float(i[1]), 2)}€ and "
         f"{round(float(i[1]) * float(i[2]) / 100, 2)}€ of profit.")
+    
     print(f"\nTotal profit is : {round(total_profit, 2)}€ for a budget of"
     f" {round(expense, 2)}€.")
-
+    
     execution_time = round(time() - start_time, 4)
     print(f"\nExecution time: {execution_time}s\n")
 
